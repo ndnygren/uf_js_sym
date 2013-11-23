@@ -47,14 +47,18 @@ function FlexibleNode()
 	{
 		var i;
 		var output = "";
-
-		for (i = 0; i < this.sub.length; i++)
+		if (this.isInner())
 		{
-			if (!this.sub[i].isInner())
+			for (i = 0; i < this.sub.length; i++)
 			{
-				output += "\"" + this.sub[i].data + "\", ";
+				if (!this.sub[i].isInner())
+				{
+					output += this.sub[i].toString();
+				}
 			}
 		}
+		else if (this.isUn()) { return "\"" + this.data + "\""; }
+		else { return this.data; }
 
 		return output;
 	}

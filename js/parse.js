@@ -32,8 +32,9 @@ function patToArray(input1)
 	return output;
 }
 
-function quickParse(pat, input)
+function quickParse(pat, input1)
 {
+	var input = trim(input1);
 	var output = new FlexibleNode();
 	var i = 0, j = 0, last = 0;
 	var candidate = "";
@@ -44,6 +45,12 @@ function quickParse(pat, input)
 		if (pata[j] == "LV" || pata[j] == "AV")
 		{
 			j++;
+		}
+		else if (j == 0 && i != 0)
+		{
+			output.clearSub();
+			output.toUn();
+			return output;
 		}
 		else if (i + pata[j].length > input.length)
 		{
@@ -57,16 +64,20 @@ function quickParse(pat, input)
 			{
 				output.addToken(pata[j]);
 				i += pata[j].length;
+				last = i;
 				j++;
 			}
 			else if (pata[j-1] == "AV" || pata[j-1] == "LV")
 			{
 				candidate = input.substr(last, i - last);
-				output.addUnParsed(candidate);
-				output.addToken(pata[j]);
-				i += pata[j].length;
-				last = i;
-				j++;
+				if (trim(candidate) != "")
+				{
+					output.addUnParsed(candidate);
+					output.addToken(pata[j]);
+					i += pata[j].length;
+					last = i;
+					j++;
+				}
 			}
 			i++;
 		}
@@ -81,11 +92,13 @@ function quickParse(pat, input)
 		candidate = input.substr(last);
 		output.addUnParsed(candidate);
 	}
-	else if (j < pata.length)
+	else if (j < pata.length || i <= input.length)
 	{
 		output.clearSub();
 		output.toUn();
 	}
+
+	alert (j + "/" + pata.length + " and i=" + i + "/" + input.length);
 
 	output.toInner();
 	return output;

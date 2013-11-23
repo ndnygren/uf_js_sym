@@ -72,6 +72,31 @@ function patToArray(input1)
 	return output;
 }
 
+function testBracketBalance(input)
+{
+	var i;
+	var stack = [];
+
+	for (i = 0; i < input.length; i++)
+	{
+		if (input[i] == '(') { stack.push('('); }
+		else if (input[i] == '{') { stack.push('{'); }
+		else if (input[i] == ')')
+		{
+			if (stack.length == 0 || stack[stack.length - 1] != '(') { return false; }
+			stack.pop();
+		}
+		else if (input[i] == '}')
+		{
+			if (stack.length == 0 || stack[stack.length - 1] != '}') { return false; }
+			stack.pop();
+		}
+	}
+
+	if (stack.length == 0) { return true; }
+	return false;
+}
+
 function quickParse(pata, output)
 {
 	var input = trim(output.data);
@@ -108,7 +133,7 @@ function quickParse(pata, output)
 			else if (pata[j-1] == "AV" || pata[j-1] == "LV")
 			{
 				candidate = input.substr(last, i - last);
-				if (trim(candidate) != "")
+				if (trim(candidate) != "" && testBracketBalance(candidate))
 				{
 					output.addUnParsed(candidate);
 					output.addToken(pata[j]);

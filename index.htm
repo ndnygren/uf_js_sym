@@ -7,9 +7,10 @@
 <script type="text/javascript" src="js/parse.js"> </script>
 </head>
 <body>
-<input id="test_input" /><br/> 
-<input id="test_output" /><br/>
-<input type="button" value="Run" onclick="document.getElementById('test_output').value = testpta(document.getElementById('test_input').value)" />
+<input id="test_input" value=" 123 + 345 + 6574" /><br/> 
+<input id="test_pat" value=" AV + AV " /><br/> 
+<input type="button" value="Run" onclick="document.getElementById('test_output').innerHTML = testpta( document.getElementById('test_pat').value , document.getElementById('test_input').value)" />
+<div id="test_output" /><br/>
 
 
 </body>

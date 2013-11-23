@@ -6,6 +6,46 @@ function trim(input)
 	return input.replace(/\s+$/, "").replace(/^\s+/, "");
 }
 
+function breakOnDelim(input, delim)
+{
+	var i;
+	var last = 0;
+	var output = [];
+
+	if (typeof(input) != 'string') { return []; }
+
+	for (i = 0; i < input.length; i++)
+	{
+		if (input[i] == delim)
+		{
+			output.push(input.substr(last, i-last));
+			last = i+1;
+		}
+	}
+	output.push(input.substr(last, i-last));
+
+	return output;
+}
+
+function buildPatternList(input)
+{
+	if (typeof(input) != 'string') { return []; }
+	var temp = breakOnDelim(input, '\n');
+	var output = [];
+	var i;
+
+	for (i = 0; i < temp.length; i++)
+	{
+		if (trim(temp[i]) != "")
+		{
+			output.push(patToArray(temp[i]));
+		}
+	}
+
+	return output;
+}
+
+
 function patToArray(input1)
 {
 	var i = 0;
@@ -32,13 +72,11 @@ function patToArray(input1)
 	return output;
 }
 
-function quickParse(pat, input1)
+function quickParse(pata, output)
 {
-	var input = trim(input1);
-	var output = new FlexibleNode();
+	var input = trim(output.data);
 	var i = 0, j = 0, last = 0;
 	var candidate = "";
-	var pata = patToArray(pat);
 
 	while (i < input.length && j < pata.length)
 	{
@@ -50,13 +88,13 @@ function quickParse(pat, input1)
 		{
 			output.clearSub();
 			output.toUn();
-			return output;
+			return false;
 		}
 		else if (i + pata[j].length > input.length)
 		{
 			output.clearSub();
 			output.toUn();
-			return output;
+			return false;
 		}
 		else if (input.substr(i, pata[j].length) == pata[j])
 		{
@@ -96,16 +134,38 @@ function quickParse(pat, input1)
 	{
 		output.clearSub();
 		output.toUn();
+		return false;
 	}
 
-	alert (j + "/" + pata.length + " and i=" + i + "/" + input.length);
-
 	output.toInner();
-	return output;
+	return true;
 }
 
-function testpta(pat, input)
+function fullParse(input, patterns)
 {
-	return quickParse(pat, input).toString();
+	var node = new FlexibleNode();
+	var i = 0;
+	var log = "";
+	node.toUn();
+	node.data = input;
+
+	log += ("\"" + JSON.stringify(patterns) + "\" tesing for " + JSON.stringify(node));
+	log += "<br/>\n";
+
+	while(!quickParse(patterns[i], node) && i < patterns.length)
+	{
+		log += ("\"" + JSON.stringify(patterns[i]) + "\" failed for " + JSON.stringify(node));
+	log += "<br/>\n";
+		i++;
+	}
+	if (patterns.length > i) { log += ("\"" + JSON.stringify(patterns[i]) + "\" succeeded for " + JSON.stringify(node)); }
+
+	return node;
+}
+
+function testpta(input,patterns)
+{
+	return fullParse(input, patterns).toString() + "<br/>\n"
+	+ JSON.stringify (fullParse(input, patterns));
 }
 

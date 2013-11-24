@@ -141,7 +141,10 @@ function quickParse(pata, output)
 					last = i;
 					j++;
 				}
-				i++;
+				else
+				{
+					i++;
+				}
 			}
 		}
 		else
@@ -150,12 +153,14 @@ function quickParse(pata, output)
 		}
 	}
 
+	//"i: " + i + "/" + input.length + "\nj: " + j + "/" + pata.length + "\n" + JSON.stringify(input) + "\n" + JSON.stringify(pata) + "\n"
+
 	if (pata.length == j && pata[j-1] == "AV" || pata[j-1] == "LV")
 	{
 		candidate = input.substr(last);
 		output.addUnParsed(candidate);
 	}
-	else if (j < pata.length || i <= input.length)
+	else if (j < pata.length || i < input.length)
 	{
 		output.clearSub();
 		output.toUn();

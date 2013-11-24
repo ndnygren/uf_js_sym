@@ -141,8 +141,8 @@ function quickParse(pata, output)
 					last = i;
 					j++;
 				}
+				i++;
 			}
-			i++;
 		}
 		else
 		{
@@ -168,22 +168,35 @@ function quickParse(pata, output)
 
 function fullParse(input, patterns)
 {
-	var node = new FlexibleNode();
+	var node = new FlexibleNode(), current;
 	var i = 0;
 	var log = "";
+	var stack = [];
 	node.toUn();
 	node.data = input;
 
-	log += ("\"" + JSON.stringify(patterns) + "\" tesing for " + JSON.stringify(node));
-	log += "<br/>\n";
+	stack.push(node);
 
-	while(!quickParse(patterns[i], node) && i < patterns.length)
+	while (stack.length != 0)
 	{
-		log += ("\"" + JSON.stringify(patterns[i]) + "\" failed for " + JSON.stringify(node));
-	log += "<br/>\n";
-		i++;
+		current = stack.pop();
+		log += ("\"" + JSON.stringify(patterns) + "\" tesing for " + JSON.stringify(current));
+		log += "<br/>\n";
+		i = 0;
+
+		while(i < patterns.length && !quickParse(patterns[i], current))
+		{
+			log += ("\"" + JSON.stringify(patterns[i]) + "\" failed for " + JSON.stringify(current));
+			log += "<br/>\n";
+			i++;
+		}
+		if (patterns.length > i) { log += ("\"" + JSON.stringify(patterns[i]) + "\" succeeded for " + JSON.stringify(current) + "<br/>\n"); }
+
+		for (i = 0; i < current.sub.length; i++)
+		{
+			if (current.sub[i].isUn()) { stack.push(current.sub[i]); }
+		}
 	}
-	if (patterns.length > i) { log += ("\"" + JSON.stringify(patterns[i]) + "\" succeeded for " + JSON.stringify(node)); }
 
 	return node;
 }

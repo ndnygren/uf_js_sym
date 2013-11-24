@@ -55,6 +55,10 @@ function FlexibleNode()
 				{
 					output += this.sub[i].toString();
 				}
+				else
+				{
+					output += "(" + this.sub[i].toString() + ")";
+				}
 			}
 		}
 		else if (this.isUn()) { return "\"" + this.data + "\""; }

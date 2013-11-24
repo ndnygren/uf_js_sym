@@ -13,9 +13,11 @@
 	-AV
 	x
 	y
+	TV_{AV}
 </div>
-<input id="test_input" value=" 123 + 345 + 6574" /><br/> 
-<input type="button" value="Run" onclick="document.getElementById('test_output').innerHTML = testpta(document.getElementById('test_input').value, patterns)" />
+<input id="test_input1" value=" 123 +x+ 345 + 6574" /><br/> 
+<input id="test_input2" value="123 + x + 345  + 6574" /><br/> 
+<input type="button" value="Run" onclick="document.getElementById('test_output').innerHTML = testpta( document.getElementById('test_input1').value, document.getElementById('test_input2').value, patterns)" />
 <div id="test_output" /><br/>
 <script type="text/javascript">
 	var patterns = buildPatternList(document.getElementById('patlist').innerHTML);

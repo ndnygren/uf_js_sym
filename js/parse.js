@@ -88,7 +88,7 @@ function testBracketBalance(input)
 		}
 		else if (input[i] == '}')
 		{
-			if (stack.length == 0 || stack[stack.length - 1] != '}') { return false; }
+			if (stack.length == 0 || stack[stack.length - 1] != '{') { return false; }
 			stack.pop();
 		}
 	}
@@ -206,9 +206,11 @@ function fullParse(input, patterns)
 	return node;
 }
 
-function testpta(input,patterns)
+function testpta(input1, input2, patterns)
 {
-	return fullParse(input, patterns).toString() + "<br/>\n"
-	+ JSON.stringify (fullParse(input, patterns));
+	var node1 =  fullParse(input1, patterns); 
+	var node2 =  fullParse(input2, patterns); 
+
+	return node1.toString() + (node1.equalTo(node2) ? " == " : " != ") + node2.toString();
 }
 

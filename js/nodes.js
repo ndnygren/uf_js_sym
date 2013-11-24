@@ -21,6 +21,40 @@ function FlexibleNode()
 	this.isUn = function() { return this.type == nn_nt_un; }
 
 
+	this.equalTo = function(node)
+	{
+		var i;
+		if (this.type != node.type) { return false; }
+		else if (!this.isInner()) { return this.data == node.data; }
+		else
+		{
+			if (this.sub.length != node.sub.length) { return false; }
+			for (i = 0; i < this.sub.length; i++)
+			{
+				if (!this.sub[i].equalTo(node.sub[i])) { return false; }
+			}
+		}
+
+		return true;
+	}
+
+	this.templateFree = function()
+	{
+		var i;
+		if (this.isUn()) { return false; }
+		else if (!this.isInner()) { return true; }
+		else if (this.sub.length == 0) { return false; }
+		else if (this.sub[0].data == "TV_{") { return false; }
+		else 
+		{
+			for (i = 0; i < this.sub.length; i++)
+			{
+				if (!this.sub[i].templateFree()) { return false; }
+			}
+			return true;
+		}
+	}
+
 	this.addUnParsed = function(input)
 	{	var current;
 		this.sub.push(new FlexibleNode());

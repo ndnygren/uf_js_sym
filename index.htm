@@ -5,6 +5,7 @@
 <title>uf_js_sym Sandbox</title>
 <script type="text/javascript" src="js/nodes.js"> </script>
 <script type="text/javascript" src="js/parse.js"> </script>
+<script type="text/javascript" src="js/rules.js"> </script>
 </head>
 <body>
 <div id="patlist">
@@ -16,7 +17,7 @@
 	TV_{AV}
 </div>
 <input id="test_input1" value=" 123 +x+ 345 + 6574" /><br/> 
-<input id="test_input2" value="123 + x + 345  + 6574" /><br/> 
+<input id="test_input2" value="TV_{5} + TV_{0} + TV_{1}  + 6574" /><br/> 
 <input type="button" value="Run" onclick="document.getElementById('test_output').innerHTML = testpta( document.getElementById('test_input1').value, document.getElementById('test_input2').value, patterns)" />
 <div id="test_output" /><br/>
 <script type="text/javascript">

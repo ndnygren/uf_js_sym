@@ -206,11 +206,4 @@ function fullParse(input, patterns)
 	return node;
 }
 
-function testpta(input1, input2, patterns)
-{
-	var node1 =  fullParse(input1, patterns); 
-	var node2 =  fullParse(input2, patterns); 
-
-	return node1.toString() + (node1.equalTo(node2) ? " == " : " != ") + node2.toString();
-}
 

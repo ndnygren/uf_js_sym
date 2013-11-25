@@ -133,6 +133,24 @@ function ruleSetHolder()
 			}
 		}
 
+		if (node.isInner())
+		{
+			for (i = 0; i < node.sub.length; i++)
+			{
+				temp = this.findMatches(node.sub[i]);
+
+				if (temp != null)
+				{
+					for (j = 0; j < temp.length; j++)
+					{
+						newnode = node.copy();
+						newnode.sub[i] = temp[j];
+						output.push(newnode);
+					}
+				}
+			}
+		}
+
 		return output;
 	}
 

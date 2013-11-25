@@ -203,7 +203,7 @@ function fullParse(input, patterns)
 		}
 	}
 
-	return node;
+	return node.clean();
 }
 
 

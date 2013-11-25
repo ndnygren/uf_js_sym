@@ -89,6 +89,26 @@ function FlexibleNode()
 		return output;
 	}
 
+	this.clean = function()
+	{
+		var i, temp;
+
+		if (!this.isInner()) { return this; }
+		if (this.sub.length == 3 && this.sub[0].data == "(" && this.sub[2].data == ")")
+		{
+			return this.sub[1].clean();
+		}
+
+		temp = this.copy();
+
+		for (i = 0; i < temp.sub.length; i++)
+		{
+			temp.sub[i] = temp.sub[i].clean();
+		}
+
+		return temp;
+	}
+
 	this.addUnParsed = function(input)
 	{	var current;
 		this.sub.push(new FlexibleNode());

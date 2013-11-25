@@ -123,11 +123,9 @@ function ruleSetHolder()
 			if (temp != null)
 			{
 				newnode = this.list[i].r.copy();
-				alert ("replacing: \n" + this.list[i].r.toString() + "\n" + JSON.stringify(temp));
 
 				for (j = 0; j < temp.length; j++)
 				{
-					alert(j);
 					newnode = newnode.replace(temp[j].l, temp[j].r);
 				}
 

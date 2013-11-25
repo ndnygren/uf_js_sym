@@ -8,13 +8,18 @@
 <script type="text/javascript" src="js/rules.js"> </script>
 </head>
 <body>
-<div id="patlist">
+<div id="patlist" style="display:none">
 	(AV)
 	AV+AV
 	-AV
 	x
 	y
 	TV_{AV}
+</div>
+<div id="ruleset" style="display:none">
+	TV_{1} + TV_{2} \Rightarrow TV_{2} + TV_{1}
+	TV_{1} + (TV_{2} + TV_{3}) \Rightarrow (TV_{1} + TV_{2}) + TV_{3}
+	(TV_{1} + TV_{2}) + TV_{3} \Rightarrow TV_{1} + (TV_{2} + TV_{3}) 
 </div>
 <input id="test_input1" value=" 123 +x+ 345 + 6574" /><br/> 
 <input id="test_input2" value="TV_{5} + TV_{0} + TV_{1}  + 6574" /><br/> 

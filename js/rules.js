@@ -72,6 +72,8 @@ function defToString(input)
 function cleanDefs(input)
 {
 	var i;
+	if (input == null) { return null; }
+
 	arraySort(input, function(lhs,rhs) { return lhs.l < rhs.l; } );
 
 	for (i = 0; i < input.length -1; i++)
@@ -85,11 +87,102 @@ function cleanDefs(input)
 	return input;
 }
 
+function ruleSetHolder()
+{
+	this.list = [];
+	this.patterns = [];
+
+	this.breakRule = function(input)
+	{
+		var m = input.match(/(.*)\\Rightarrow(.*)/);
+		var node1;
+		var node2;
+
+		if (m.length != 3) { return null; }
+
+		node1 = fullParse(m[1], this.patterns);
+		node2 = fullParse(m[2], this.patterns);
+
+		if (node1.isUn()) { alert ("failed to parse rule " + m[1]); return null;}
+		if (node2.isUn()) { alert ("failed to parse rule " + m[2]); return null;}
+
+		return {l: node1, r: node2 };
+	}
+
+
+	this.findMatches = function(node)
+	{
+		var i,j;
+		var output = [];
+		var temp;
+		var newnode;
+
+		for (i = 0; i < this.list.length; i++)
+		{
+			temp = cleanDefs(getDefs(node,this.list[i].l));
+			if (temp != null)
+			{
+				newnode = this.list[i].r.copy();
+				alert ("replacing: \n" + this.list[i].r.toString() + "\n" + JSON.stringify(temp));
+
+				for (j = 0; j < temp.length; j++)
+				{
+					alert(j);
+					newnode = newnode.replace(temp[j].l, temp[j].r);
+				}
+
+				output.push(newnode);
+			}
+		}
+
+		return output;
+	}
+
+	this.readList = function(input)
+	{
+		var lines = breakOnDelim(input, '\n');
+		var i;
+		var temp;
+
+		for (i = 0; i < lines.length; i++)
+		{
+			if (trim(lines[i]) != "")
+			{
+				temp = this.breakRule(lines[i]);
+				if (temp != null)
+				{
+					this.list.push(temp);
+				}
+			}
+		}
+	}
+}
+
+function nodeListToString(list)
+{
+	var i = 0;
+	var output = "";
+
+	for (i = 0; i < list.length; i++)
+	{
+		output += i + ":\t" + list[i].toString() + "<br/>\n";
+	}
+
+	return output;
+}
+
 function testpta(input1, input2, patterns)
 {
-	var node1 =  fullParse(input1, patterns); 
-	var node2 =  fullParse(input2, patterns); 
+	var node1 =  fullParse(input1, patterns);
+	var node2 =  fullParse(input2, patterns);
+	var rs = new ruleSetHolder();
+	rs.patterns = patterns;
+
+	rs.readList(document.getElementById('ruleset').innerHTML);
 
 	return node1.toString() + (node1.equalTo(node2) ? " == " : " != ") + node2.toString() + "<br/>\n"
-		+ defToString(cleanDefs(getDefs(node1,node2)));
+		+ defToString(cleanDefs(getDefs(node1,node2))) + "<br/>\n"
+		+ nodeListToString(rs.findMatches(node1));
 }
+
+

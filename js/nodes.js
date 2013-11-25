@@ -45,7 +45,7 @@ function FlexibleNode()
 		else if (!this.isInner()) { return true; }
 		else if (this.sub.length == 0) { return false; }
 		else if (this.sub[0].data == "TV_{") { return false; }
-		else 
+		else
 		{
 			for (i = 0; i < this.sub.length; i++)
 			{
@@ -53,6 +53,40 @@ function FlexibleNode()
 			}
 			return true;
 		}
+	}
+
+	this.copy = function()
+	{
+		var i;
+		var output = new FlexibleNode();
+		output.type = this.type;
+		output.data = this.data;
+
+		for (i = 0; i < this.sub.length; i++)
+		{
+			output.sub.push(this.sub[i].copy());
+		}
+
+		return output;
+	}
+
+	this.replace = function(idx, node)
+	{
+		var i;
+		var output;
+
+		if (!this.isInner()) { return this.copy(); }
+
+		output = this.copy();
+
+		if (output.sub[0].data == "TV_{" && parseInt(output.sub[1].data) == idx) { return node; }
+
+		for (i = 0; i < output.sub.length; i++)
+		{
+			output.sub[i] = output.sub[i].replace(idx, node);
+		}
+
+		return output;
 	}
 
 	this.addUnParsed = function(input)

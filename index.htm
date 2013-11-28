@@ -3,6 +3,7 @@
 <html>
 <head>
 <title>uf_js_sym Sandbox</title>
+<link href="css/style.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="js/nodes.js"> </script>
 <script type="text/javascript" src="js/parse.js"> </script>
 <script type="text/javascript" src="js/rules.js"> </script>
@@ -21,10 +22,24 @@
 	TV_{1} + (TV_{2} + TV_{3}) \Rightarrow (TV_{1} + TV_{2}) + TV_{3}
 	(TV_{1} + TV_{2}) + TV_{3} \Rightarrow TV_{1} + (TV_{2} + TV_{3}) 
 </div>
-<input id="test_input1" value=" 123 +x+ 345 + 6574" /><br/> 
-<input id="test_input2" value="TV_{5} + TV_{0} + TV_{1}  + 6574" /><br/> 
-<input type="button" value="Run" onclick="document.getElementById('test_output').innerHTML = testpta( document.getElementById('test_input1').value, document.getElementById('test_input2').value, patterns)" />
-<div id="test_output" /><br/>
+<div id="maincontainer">
+	<div id="header">
+		<div align=LEFT width=20%><h1>nygren.ca - General Algebra System</h1></div>
+	</div>
+	<div id="clear">
+		<div id="menus">
+			<a href="/">&lt; Back</a><br/>
+		</div>
+		<div id="content">
+
+			<input id="test_input1" value=" 123 +x+ 345 + 6574" /><br/> 
+			<input id="test_input2" value="TV_{5} + TV_{0} + TV_{1}  + 6574" /><br/> 
+			<input type="button" value="Run" onclick="document.getElementById('test_output').innerHTML = testpta( document.getElementById('test_input1').value, document.getElementById('test_input2').value, patterns)" />
+			<div id="test_output" /><br/>
+		</div>
+	</div>
+</div>
+
 <script type="text/javascript">
 	var patterns = buildPatternList(document.getElementById('patlist').innerHTML);
 </script>

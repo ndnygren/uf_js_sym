@@ -35,7 +35,14 @@ function proofStack()
 
 	this.push = function(newnode)
 	{
-		this.stack.push(fullParse(newnode, this.Apatterns));
+		if (typeof(newnode) == 'string')
+		{
+			this.stack.push(fullParse(newnode, this.Apatterns));
+		}
+		else
+		{
+			this.stack.push(newnode);
+		}
 		this.refresh();
 	}
 
@@ -59,17 +66,39 @@ function proofStack()
 
 	this.genOutput = function()
 	{
-		var output = "<div class='prooflist'><h3>Proof</h3>\n"; 
-		output += nodeListToTable(this.stack, 'output_table');
-		output += "</div>\n<div class='optionslist'><h3>Options</h3>\n";
-		output += nodeListToTable(this.options, 'output_table');
-		output += "</div>";
+		var i;
+		var output = "<div class='prooflist'>\n<h3>Proof</h3>\n"; 
+		output +=  "<table class='output_table'>\n";
+		for (i = 0; i < this.stack.length; i++)
+		{
+			output += "<tr><td onclick='ps.pop();'>" + this.stack[i].toString() + "</td></tr>\n";
+		}
+		output += "</table>\n";
+		output += "</div>\n";
+
+		output += "<div class='optionslist'>\n<h3>Options</h3>\n";
+		output += "<table class='output_table'>\n";
+		for (i = 0; i < this.options.length; i++)
+		{
+			output += "<tr><td onclick='ps.pushByOptionId(" + i + ")'>" + this.options[i].toString() + "</td></tr>\n";
+		}
+		output += "</table>\n";
+		output += "</div>\n";
+
 		return output;
 	}
 
 	this.genOutputToDiv = function(divname)
 	{
 		document.getElementById(divname).innerHTML = this.genOutput();
+	}
+
+	this.pushByOptionId = function(idx)
+	{
+		if (idx >= 0 && idx < this.options.length)
+		{
+			this.push(this.options[idx]);
+		}
 	}
 
 	this.RuleSet = function(input)

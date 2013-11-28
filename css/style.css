@@ -94,10 +94,16 @@ table.output_table tr:nth-child(even) td
 	background-color:#FFFFFF;
 }
 
+table.output_table tr:hover td
+{
+	color:#EEEEEE;
+	background-color:#555555;
+}
+
 table.output_table td
 {
 	font-family: "Courier New", Courier, monospace;
-	padding: 0px;
+	padding: 2px;
 	margin: 0px;
 	font-size: .85em;
 	color:#333333;
@@ -111,6 +117,25 @@ div.code
 	font-size: 1.2em;
 	color:#333333;
 	background-color:#DDDDDD;
+}
+
+div.prooflist
+{
+	width: 45%;
+	float: left;
+}
+
+div.optionslist
+{
+	width: 45%;
+	float: right;
+	background-color:#DDDDDD;
+	padding: 10px;
+	border:2px solid #777777;
+	-moz-border-radius: 15px;
+	-webkit-border-radius: 15px;
+	-khtml-border-radius: 15px;
+	border-radius: 15px;
 }
 
 a:link    {

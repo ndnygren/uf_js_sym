@@ -187,18 +187,3 @@ function nodeListToString(list)
 	return output;
 }
 
-function testpta(input1, input2, patterns)
-{
-	var node1 =  fullParse(input1, patterns);
-	var node2 =  fullParse(input2, patterns);
-	var rs = new ruleSetHolder();
-	rs.patterns = patterns;
-
-	rs.readList(document.getElementById('ruleset').innerHTML);
-
-	return node1.toString() + (node1.equalTo(node2) ? " == " : " != ") + node2.toString() + "<br/>\n"
-		+ defToString(cleanDefs(getDefs(node1,node2))) + "<br/>\n"
-		+ nodeListToString(rs.findMatches(node1));
-}
-
-

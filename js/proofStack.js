@@ -37,7 +37,7 @@ function proofStack()
 	{
 		if (typeof(newnode) == 'string')
 		{
-			this.stack.push(fullParse(newnode, this.Apatterns));
+			this.stack.push(fullParse(newnode, this.Apatterns, this.Lpatterns));
 		}
 		else
 		{
@@ -52,10 +52,22 @@ function proofStack()
 		this.refresh();
 	}
 
+	this.LPatternList = function(input)
+	{
+		this.Lpatterns = buildPatternList(input);
+		this.rs.Lpatterns = this.Lpatterns;
+	}
+
+
+	this.LPatternListFromDiv = function(divname)
+	{
+		this.LPatternList(document.getElementById(divname).innerHTML);
+	}
+
 	this.APatternList = function(input)
 	{
 		this.Apatterns = buildPatternList(input);
-		this.rs.patterns = this.Apatterns;
+		this.rs.Apatterns = this.Apatterns;
 	}
 
 

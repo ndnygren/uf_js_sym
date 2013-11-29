@@ -10,6 +10,7 @@ function FlexibleNode()
 	this.type = nn_nt_tok;
 	this.data = "";
 	this.sub = [];
+	this.pat = [];
 
 	this.toTok = function() { this.type = nn_nt_tok; }
 	this.toNum = function() { this.type = nn_nt_num; }

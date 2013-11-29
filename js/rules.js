@@ -90,7 +90,8 @@ function cleanDefs(input)
 function ruleSetHolder()
 {
 	this.list = [];
-	this.patterns = [];
+	this.Apatterns = [];
+	this.Lpatterns = [];
 
 	this.breakRule = function(input)
 	{
@@ -100,8 +101,8 @@ function ruleSetHolder()
 
 		if (m.length != 3) { return null; }
 
-		node1 = fullParse(m[1], this.patterns);
-		node2 = fullParse(m[2], this.patterns);
+		node1 = fullParse(m[1], this.Apatterns, this.Lpatterns);
+		node2 = fullParse(m[2], this.Apatterns, this.Lpatterns);
 
 		if (node1.isUn()) { alert ("failed to parse rule " + m[1]); return null;}
 		if (node2.isUn()) { alert ("failed to parse rule " + m[2]); return null;}

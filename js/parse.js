@@ -167,20 +167,22 @@ function quickParse(pata, output)
 		return false;
 	}
 
+	output.pat = pata;
 	output.toInner();
 	return true;
 }
 
-function fullParse(input, patterns)
+function fullParse(input, apatterns, lpatterns)
 {
 	var node = new FlexibleNode(), current;
 	var i = 0;
 	var log = "";
 	var stack = [];
+	var patterns = [];
 	node.toUn();
 	node.data = input;
 
-	stack.push(node);
+	stack.push({node: node, type: "both"});
 
 	while (stack.length != 0)
 	{
@@ -189,7 +191,11 @@ function fullParse(input, patterns)
 		log += "<br/>\n";
 		i = 0;
 
-		while(i < patterns.length && !quickParse(patterns[i], current))
+		if (current.type == "AV") { patterns = apatterns; }
+		else if (current.type == "LV") { patterns = apatterns; }
+		else if (current.type == "both") { patterns = lpatterns.concat(apatterns); }
+
+		while(i < patterns.length && !quickParse(patterns[i], current.node))
 		{
 			log += ("\"" + JSON.stringify(patterns[i]) + "\" failed for " + JSON.stringify(current));
 			log += "<br/>\n";
@@ -197,9 +203,9 @@ function fullParse(input, patterns)
 		}
 		if (patterns.length > i) { log += ("\"" + JSON.stringify(patterns[i]) + "\" succeeded for " + JSON.stringify(current) + "<br/>\n"); }
 
-		for (i = 0; i < current.sub.length; i++)
+		for (i = 0; i < current.node.sub.length; i++)
 		{
-			if (current.sub[i].isUn()) { stack.push(current.sub[i]); }
+			if (current.node.sub[i].isUn()) { stack.push({node: current.node.sub[i], type: current.node.pat[i]} ); }
 		}
 	}
 

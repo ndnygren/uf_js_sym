@@ -10,7 +10,10 @@
 <script type="text/javascript" src="js/proofStack.js"> </script>
 </head>
 <body>
-<div id="patlist" style="display:none">
+<div id="Lpatlist" style="display:none">
+	AV=AV
+</div>
+<div id="Apatlist" style="display:none">
 	(AV)
 	AV+AV
 	-AV
@@ -34,18 +37,27 @@
 		<div id="content">
 
 			<input id="test_input1" value=" 123 +x+ 345 + 6574" /><br/> 
-			<input type="button" value="Run" onclick="document.getElementById('test_output').innerHTML = testpta( document.getElementById('test_input1').value, document.getElementById('test_input2').value, patterns)" />
+			<input type="button" value="Run" onclick=" ps = reloadStack() " />
 			<div id="test_output" /><br/>
 		</div>
 	</div>
 </div>
 
 <script type="text/javascript">
-	var ps = new proofStack();
-	ps.APatternListFromDiv("patlist");
-	ps.RuleSetFromDiv("ruleset");
-	ps.outdiv = "test_output";
-	ps.push(document.getElementById('test_input1').value);
+
+	function reloadStack()
+	{
+		var ps = new proofStack();
+		ps.APatternListFromDiv("Apatlist");
+		ps.LPatternListFromDiv("Lpatlist");
+		ps.RuleSetFromDiv("ruleset");
+		ps.outdiv = "test_output";
+		ps.push(document.getElementById('test_input1').value);
+		return ps;
+	}
+
+	var ps = reloadStack();
+
 </script>
 
 </body>

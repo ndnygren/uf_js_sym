@@ -118,6 +118,8 @@ function ruleSetHolder()
 		var temp;
 		var newnode;
 
+		if (node.isTok() || node.isUn()) { return []; }
+
 		for (i = 0; i < this.list.length; i++)
 		{
 			temp = cleanDefs(getDefs(node,this.list[i].l));

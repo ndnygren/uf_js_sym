@@ -10,21 +10,42 @@
 <script type="text/javascript" src="js/proofStack.js"> </script>
 </head>
 <body>
-<div id="Lpatlist" style="display:none">
+<div id="field_Lpat" style="display:none">
 	AV=AV
+	TV_{AV}
 </div>
-<div id="Apatlist" style="display:none">
+<div id="field_Apat" style="display:none">
 	(AV)
 	AV+AV
+	AV \cdot AV
+	AV^{AV}
 	-AV
 	x
+	x_{AV}
 	y
 	TV_{AV}
 </div>
-<div id="ruleset" style="display:none">
+<div id="field_rule" style="display:none">
+	TV_{1} \Rightarrow TV_{1} + 0
+	TV_{1} + 0 \Rightarrow TV_{1}
+	0 + TV_{1} \Rightarrow TV_{1}
+	TV_{1} \Rightarrow TV_{1} \cdot 1
+	TV_{1}\cdot 1 \Rightarrow TV_{1}
+	1\cdot TV_{1} \Rightarrow TV_{1}
 	TV_{1} + TV_{2} \Rightarrow TV_{2} + TV_{1}
 	TV_{1} + (TV_{2} + TV_{3}) \Rightarrow (TV_{1} + TV_{2}) + TV_{3}
 	(TV_{1} + TV_{2}) + TV_{3} \Rightarrow TV_{1} + (TV_{2} + TV_{3}) 
+	TV_{1} \cdot TV_{2} \Rightarrow TV_{2} \cdot TV_{1}
+	TV_{1} \cdot (TV_{2} \cdot TV_{3}) \Rightarrow (TV_{1} \cdot TV_{2}) \cdot TV_{3}
+	(TV_{1} \cdot TV_{2}) \cdot TV_{3} \Rightarrow TV_{1} \cdot (TV_{2} \cdot TV_{3}) 
+	TV_{1}^{0} \Rightarrow (1)
+	TV_{1}^{TV_{2}} \Rightarrow TV_{1}\cdot TV_{1}^{TV_{2} + -(1)}
+	TV_{1} + -TV_{1} \Rightarrow (0)
+	TV_{1} \Rightarrow TV_{1}^{1}
+	TV_{1}^{1} \Rightarrow TV_{1}
+	TV_{1}\cdot (TV_{2} + TV_{3}) \Rightarrow (TV_{1}\cdot TV_{2}) + (TV_{1} \cdot TV_{3})
+	(TV_{1}\cdot TV_{2}) + (TV_{1} \cdot TV_{3}) \Rightarrow TV_{1}\cdot (TV_{2} + TV_{3}) 
+	TV_{1}^{TV_{2}}\cdot TV_{1}^{TV_{3}} \Rightarrow TV_{1}^{TV_{2} + TV_{3}}
 </div>
 <div id="maincontainer">
 	<div id="header">
@@ -37,26 +58,27 @@
 		<div id="content">
 
 			<input id="test_input1" value=" 123 +x+ 345 + 6574" /><br/> 
-			<input type="button" value="Run" onclick=" ps = reloadStack() " />
+			<input type="button" value="Run" onclick=" ps = reloadStack(currentset) " />
 			<div id="test_output" /><br/>
 		</div>
 	</div>
 </div>
 
 <script type="text/javascript">
+	var currentset = "field";
 
-	function reloadStack()
+	function reloadStack(currentset)
 	{
 		var ps = new proofStack();
-		ps.APatternListFromDiv("Apatlist");
-		ps.LPatternListFromDiv("Lpatlist");
-		ps.RuleSetFromDiv("ruleset");
+		ps.APatternListFromDiv(currentset + "_Apat");
+		ps.LPatternListFromDiv(currentset + "_Lpat");
+		ps.RuleSetFromDiv(currentset + "_rule");
 		ps.outdiv = "test_output";
 		ps.push(document.getElementById('test_input1').value);
 		return ps;
 	}
 
-	var ps = reloadStack();
+	var ps = reloadStack("field");
 
 </script>
 

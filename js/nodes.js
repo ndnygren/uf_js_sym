@@ -95,6 +95,7 @@ function FlexibleNode()
 		var i, temp;
 
 		if (!this.isInner()) { return this; }
+		if (this.sub.length == 1) { return this.sub[0].clean(); }
 		if (this.sub.length == 3 && this.sub[0].data == "(" && this.sub[2].data == ")")
 		{
 			return this.sub[1].clean();

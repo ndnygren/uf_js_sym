@@ -10,6 +10,47 @@
 <script type="text/javascript" src="js/proofStack.js"> </script>
 </head>
 <body>
+<div id="rcalc_Lpat" style="display:none">
+	AV=AV
+	TV_{AV}
+</div>
+<div id="rcalc_Apat" style="display:none">
+	\frac{dAV}{dAV}
+	(AV)
+	AV+AV
+	AV \cdot AV
+	AV^{AV}
+	-AV
+	x
+	x_{AV}
+	y
+	TV_{AV}
+</div>
+<div id="rcalc_rule" style="display:none">
+	TV_{1} \Rightarrow TV_{1} + 0
+	TV_{1} + 0 \Rightarrow TV_{1}
+	0 + TV_{1} \Rightarrow TV_{1}
+	TV_{1} \Rightarrow TV_{1} \cdot 1
+	TV_{1}\cdot 1 \Rightarrow TV_{1}
+	1\cdot TV_{1} \Rightarrow TV_{1}
+	TV_{1} + TV_{2} \Rightarrow TV_{2} + TV_{1}
+	TV_{1} + (TV_{2} + TV_{3}) \Rightarrow (TV_{1} + TV_{2}) + TV_{3}
+	(TV_{1} + TV_{2}) + TV_{3} \Rightarrow TV_{1} + (TV_{2} + TV_{3}) 
+	TV_{1} \cdot TV_{2} \Rightarrow TV_{2} \cdot TV_{1}
+	TV_{1} \cdot (TV_{2} \cdot TV_{3}) \Rightarrow (TV_{1} \cdot TV_{2}) \cdot TV_{3}
+	(TV_{1} \cdot TV_{2}) \cdot TV_{3} \Rightarrow TV_{1} \cdot (TV_{2} \cdot TV_{3}) 
+	TV_{1}^{0} \Rightarrow (1)
+	TV_{1}^{TV_{2}} \Rightarrow TV_{1}\cdot TV_{1}^{TV_{2} + -(1)}
+	TV_{1} + -TV_{1} \Rightarrow (0)
+	TV_{1} \Rightarrow TV_{1}^{1}
+	TV_{1}^{1} \Rightarrow TV_{1}
+	TV_{1}\cdot (TV_{2} + TV_{3}) \Rightarrow (TV_{1}\cdot TV_{2}) + (TV_{1} \cdot TV_{3})
+	(TV_{1}\cdot TV_{2}) + (TV_{1} \cdot TV_{3}) \Rightarrow TV_{1}\cdot (TV_{2} + TV_{3}) 
+	TV_{1}^{TV_{2}}\cdot TV_{1}^{TV_{3}} \Rightarrow TV_{1}^{TV_{2} + TV_{3}}
+	\frac{dTV_{1}}{dTV_{1}} \Rightarrow (1)
+	\frac{dTV_{1} + TV_{3}}{dTV_{2}} \Rightarrow \frac{dTV_{1}}{dTV_{2}} + \frac{dTV_{3}}{dTV_{2}}
+	\frac{dTV_{1} \cdot TV_{3}}{dTV_{2}} \Rightarrow \frac{dTV_{1}}{dTV_{2}} \cdot TV_{3} + \frac{dTV_{3}}{dTV_{2}}  \cdot TV_{2}
+</div>
 <div id="field_Lpat" style="display:none">
 	AV=AV
 	TV_{AV}
@@ -56,8 +97,24 @@
 			<a href="/">&lt; Back</a><br/>
 		</div>
 		<div id="content">
-
-			<input id="test_input1" value=" 123 +x+ 345 + 6574" /><br/> 
+			<p>
+				Using variable grammars and "axioms" (substitution rules) many different agebraic systems may be represented using the same system.
+			</p>
+			<p>
+				Here a simple 2 variable system is used to represent equations and logical statements. 
+				The first is <i>LV</i>, representing "Truth-valued" expressions.
+				The second is <i>AV</i>, representing "Number-valued" expressions.
+			</p>
+			<p>
+				Available rulesets:
+				<select onchange="currentset = this.value; ps = reloadStack(currentset)">
+					<option value='rcalc'>Real Calculus</option>
+					<option value='field'>Field Theory</option>
+				</select>
+				<a href="javascript:void(0)" onclick="document.getElementById('details_out').style.display='block'" >details</a>
+			</p>
+			<div id="details_out" style="display:none"></div>
+			<input id="test_input1" value=" \frac{dx_{2}+x_{3}}{dx_{2}}" /><br/> 
 			<input type="button" value="Run" onclick=" ps = reloadStack(currentset) " />
 			<div id="test_output" /><br/>
 		</div>
@@ -65,7 +122,7 @@
 </div>
 
 <script type="text/javascript">
-	var currentset = "field";
+	var currentset = "rcalc";
 
 	function reloadStack(currentset)
 	{
@@ -75,10 +132,11 @@
 		ps.RuleSetFromDiv(currentset + "_rule");
 		ps.outdiv = "test_output";
 		ps.push(document.getElementById('test_input1').value);
+		ps.ruleDetailsToDiv('details_out');
 		return ps;
 	}
 
-	var ps = reloadStack("field");
+	var ps = reloadStack(currentset);
 
 </script>
 

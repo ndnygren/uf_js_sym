@@ -105,6 +105,46 @@ function proofStack()
 		document.getElementById(divname).innerHTML = this.genOutput();
 	}
 
+	this.ruleDetails = function()
+	{
+		var i;
+		var output = "<h2>Rule Set Details</h2><a href=\"javascript:void(0)\" onclick='document.getElementById(\"details_out\").style.display=\"none\"'><h3>hide</h3></a><div class='detailsList'>\n";
+
+		output += "<h3>LV patterns</h3><table class='output_table' >\n";
+		for (i = 0; i < this.Lpatterns.length; i++)
+		{
+			output += "<tr><td>" + this.Lpatterns[i].toString() + "</td></tr>\n";
+		}
+		output += "</table>\n";
+
+		output += "</div>\n<div class='detailsList'>\n";
+
+		output += "<h3>AV patterns</h3><table class='output_table' >\n";
+		for (i = 0; i < this.Apatterns.length; i++)
+		{
+			output += "<tr><td>" + this.Apatterns[i].toString() + "</td></tr>\n";
+		}
+		output += "</table>\n";
+
+		output += "</div>\n<div class='detailsList'>\n";
+		output += "<h3>Substitution Rules</h3><table class='output_table' >\n";
+		for (i = 0; i < this.rs.list.length; i++)
+		{
+			output += "<tr><td>" + this.rs.list[i].l.toString();
+			output += "</td><td>" + this.rs.list[i].r.toString();
+			output += "</td></tr>\n";
+		}
+		output += "</table>\n";
+		output += "</div>";
+
+		return output;
+	}
+
+	this.ruleDetailsToDiv = function(divname)
+	{
+		document.getElementById(divname).innerHTML = this.ruleDetails();
+	}
+
 	this.pushByOptionId = function(idx)
 	{
 		if (idx >= 0 && idx < this.options.length)
@@ -116,7 +156,7 @@ function proofStack()
 	this.RuleSet = function(input)
 	{
 		this.rs.readList(input);
-		this.rs.patterns = this.Apatterns;
+		this.rs.Apatterns = this.Apatterns;
 	}
 
 	this.RuleSetFromDiv = function(divname)

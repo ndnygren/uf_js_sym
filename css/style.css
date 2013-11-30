@@ -138,6 +138,23 @@ div.optionslist
 	border-radius: 15px;
 }
 
+div.detailsList
+{
+	float: left;
+	padding:5px;
+}
+
+#details_out
+{
+	float: left;
+	padding: 10px;
+	border:2px solid #777777;
+	-moz-border-radius: 15px;
+	-webkit-border-radius: 15px;
+	-khtml-border-radius: 15px;
+	border-radius: 15px;
+}
+
 a:link    {
 	text-decoration:  none;
 	color:            #000000;

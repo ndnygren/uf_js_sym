@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
+// generates an HTML formatted table from a list of nodes
 function nodeListToTable(list, cssclass)
 {
         var i = 0;
@@ -32,6 +32,7 @@ function nodeListToTable(list, cssclass)
 
 function proofStack()
 {
+	// class for storing and manipulating a sequence of expressions, representing a proof
 	this.stack = [];
 	this.options = [];
 	this.Apatterns = [];
@@ -41,6 +42,7 @@ function proofStack()
 
 	this.refresh = function()
 	{
+		// generate list of options
 		if (this.stack.length > 0)
 		{
 			this.options = this.rs.findMatches(this.stack[this.stack.length-1]);
@@ -49,11 +51,14 @@ function proofStack()
 		{
 			this.options = [];
 		}
+		// refresh user-facing display
 		this.genOutputToDiv(this.outdiv);
 	}
 
+	// adds a new node to the sequence
 	this.push = function(newnode)
 	{
+		// overloading accepts both strings, and parsed nodes
 		if (typeof(newnode) == 'string')
 		{
 			this.stack.push(fullParse(newnode, this.Apatterns, this.Lpatterns));
@@ -65,12 +70,14 @@ function proofStack()
 		this.refresh();
 	}
 
+	// removes a node from the stack (back-tracking)
 	this.pop = function()
 	{
 		this.stack.pop();
 		this.refresh();
 	}
 
+	// read pattern list
 	this.LPatternList = function(input)
 	{
 		this.Lpatterns = buildPatternList(input);
@@ -83,6 +90,7 @@ function proofStack()
 		this.LPatternList(document.getElementById(divname).innerHTML);
 	}
 
+	// read pattern list
 	this.APatternList = function(input)
 	{
 		this.Apatterns = buildPatternList(input);
@@ -95,6 +103,7 @@ function proofStack()
 		this.APatternList(document.getElementById(divname).innerHTML);
 	}
 
+	// generates the proof as an HTML table formatted list, same for the optional steps
 	this.genOutput = function()
 	{
 		var i;
@@ -102,6 +111,7 @@ function proofStack()
 		output +=  "<table class='output_table'>\n";
 		for (i = 0; i < this.stack.length; i++)
 		{
+			// clicking a line in this back-tracks
 			output += "<tr><td onclick='ps.pop();'>" + this.stack[i].toString() + "</td></tr>\n";
 		}
 		output += "</table>\n";
@@ -111,6 +121,7 @@ function proofStack()
 		output += "<table class='output_table'>\n";
 		for (i = 0; i < this.options.length; i++)
 		{
+			// clicking on an option pushes to the proof sequence
 			output += "<tr><td onclick='ps.pushByOptionId(" + i + ")'>" + this.options[i].toString() + "</td></tr>\n";
 		}
 		output += "</table>\n";
@@ -124,6 +135,7 @@ function proofStack()
 		document.getElementById(divname).innerHTML = this.genOutput();
 	}
 
+	// generates the HTML formatted details about patterns and the rule set, visible to the user
 	this.ruleDetails = function()
 	{
 		var i;
@@ -164,6 +176,8 @@ function proofStack()
 		document.getElementById(divname).innerHTML = this.ruleDetails();
 	}
 
+
+	// pushes one of the existing options, rather than a new node.
 	this.pushByOptionId = function(idx)
 	{
 		if (idx >= 0 && idx < this.options.length)
@@ -172,6 +186,7 @@ function proofStack()
 		}
 	}
 
+	// reads the rule set, using the rule set's own parser 
 	this.RuleSet = function(input)
 	{
 		this.rs.readList(input);

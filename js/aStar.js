@@ -65,20 +65,67 @@ function aStarGraph(rules)
 		}
 	}
 
+	this.findMin = function()
+	{
+		var key;
+		var res;
+		var minlength = 100000;
+		var minnode = null;
+
+		for (key in this.data)
+		{
+			res = this.data[key];
+			if (res.name.length < minlength)
+			{
+				minnode = res.name;
+				minlength = res.name.length
+			}
+		}
+
+		return minnode;
+	}
+
+	this.findPath = function(endnode)
+	{
+		var revarr = [];
+		var output = [];
+		var current = endnode;
+
+		while (this.data[current])
+		{
+			revarr.push(this.data[current].data);
+			current = this.data[current].prev;
+		}
+
+		while(revarr.length > 0)
+		{
+			output.push(revarr.pop());
+		}
+
+		return output;
+	}
+
 	this.searchFrom = function(node, data, maxdepth)
 	{
 		this.add(node, data, 0);
 		this.data[node].depth = 0;
 		this.fillToDepth(maxdepth);
+
+		return this.findPath(this.findMin());
 	}
 }
 
 function runSearch(ps)
 {
+	var i;
 	var current = ps.stack[ps.stack.length - 1];
 	var asearch = new aStarGraph(ps.rs);
-	asearch.searchFrom(current.toString(), current, 2);
-	alert(JSON.stringify(asearch.data));
+	var path = asearch.searchFrom(current.toString(), current, 2);
+
+	for (i = 1; i < path.length; i++)
+	{
+		ps.push(path[i]);
+	}
 }
 
 

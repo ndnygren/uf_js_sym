@@ -117,7 +117,11 @@ function proofStack()
 		output += "</table>\n";
 		output += "</div>\n";
 
-		output += "<div class='optionslist'>\n<h3>Options</h3>\n";
+		output += "<div class='optionslist'>\n<h3>A* search</h3>\n";
+		output += "<table class='output_table'>\n";
+		output += "<tr><td onclick='runSearch(ps)'>Minimize String Length</td></tr>\n";
+		output += "</table>\n";
+		output += "<h3>Manual Options</h3>\n";
 		output += "<table class='output_table'>\n";
 		for (i = 0; i < this.options.length; i++)
 		{

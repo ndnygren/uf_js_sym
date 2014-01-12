@@ -162,6 +162,27 @@ function ruleSetHolder()
 		// do not try to match tokens or failed parses
 		if (node.isTok() || node.isUn()) { return []; }
 
+		if (node.isInner() && node.sub.length >= 3 && node.sub[0].isNum() && node.sub[2].isNum())
+		{
+			if (node.sub[1].isTok() && node.sub[1].data == "+")
+			{
+				newnode = new FlexibleNode();
+				newnode.data = (parseInt(node.sub[0].data) + parseInt(node.sub[2].data)).toString();
+				newnode.toNum();
+				output.push(newnode);
+				newnode = undefined;
+			}
+                        else if (node.sub[1].isTok() && node.sub[1].data == "\\cdot")
+                        {
+                                newnode = new FlexibleNode();
+                                newnode.data = (parseInt(node.sub[0].data) * parseInt(node.sub[2].data)).toString();
+                                newnode.toNum();
+                                output.push(newnode);
+                                newnode = undefined;
+                        }
+
+		}
+
 		// apply revery rule in the list
 		for (i = 0; i < this.list.length; i++)
 		{

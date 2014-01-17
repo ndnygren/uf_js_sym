@@ -121,6 +121,10 @@ function proofStack()
 		output += "<table class='output_table'>\n";
 		output += "<tr><td onclick='runSearch(ps)'>Minimize String Length</td></tr>\n";
 		output += "</table>\n";
+		output += "<h3>Associativity/Commutativity assumed</h3>\n";
+		output += "<table class='output_table'>\n";
+		output += "<tr><td onclick='sumOfProd(ps)'>Sum of Products</td></tr>\n";
+		output += "</table>\n";
 		output += "<h3>Manual Options</h3>\n";
 		output += "<table class='output_table'>\n";
 		for (i = 0; i < this.options.length; i++)

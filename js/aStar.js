@@ -178,4 +178,70 @@ function runSearch(ps)
 	}
 }
 
+function isProd(node)
+{
+	if (!node.isInner()) { return false; }
+	else if (node.sub.length != 3) { return false; }
+	else if (node.sub[1].data != "\\cdot") { return false; }
+	else { return true; }
+}
+
+function isSum(node)
+{
+	if (!node.isInner()) { return false; }
+	else if (node.sub.length != 3) { return false; }
+	else if (node.sub[1].data != "+") { return false; }
+	else { return true; }
+}
+
+
+// recursively distributes mulitplication against addition
+function distProd(node)
+{
+	var n1, n2;
+
+	if (isProd(node)) 
+	{
+		node.sub[0] = distProd(node.sub[0]);
+		node.sub[2] = distProd(node.sub[2]);
+		if (isSum(node.sub[0]))
+		{
+			n1 = node.copy();
+			n2 = node.copy();
+			node.sub[1] = node.sub[0].sub[1];
+			n1.sub[0] = n1.sub[0].sub[0];
+			n2.sub[0] = n2.sub[0].sub[2];
+			node.sub[0] = n1;
+			node.sub[2] = n2;
+		}
+		else if (isSum(node.sub[2]))
+		{
+			n1 = node.copy();
+			n2 = node.copy();
+			node.sub[1] = node.sub[2].sub[1];
+			n1.sub[2] = n1.sub[2].sub[0];
+			n2.sub[2] = n2.sub[2].sub[2];
+			node.sub[0] = n1;
+			node.sub[2] = n2;
+		}
+	}
+	else if (isSum(node))
+	{
+		node.sub[0] = distProd(node.sub[0]);
+		node.sub[2] = distProd(node.sub[2]);
+	}
+	return node;
+}
+
+// converts the expression at the top of the stack into a sum of products (applying distributivity)
+function sumOfProd(ps)
+{
+	var current = ps.stack[ps.stack.length - 1];
+	var newnode = distProd(current.copy());
+
+	if (!newnode.equalTo(current))
+	{
+		ps.push(newnode);
+	}
+}
 

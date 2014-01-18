@@ -259,6 +259,76 @@ function termList(node, test)
 	return output;
 }
 
+// searches an expression for additions and multiplications of numbers
+function findNumbers(node)
+{
+	var n1, n2, temp;
+
+	if (isSum(node))
+	{
+		n1 = findNumbers(node.sub[0]);
+		n2 = findNumbers(node.sub[2]);
+		if (n1.isNum() && n2.isNum())
+		{
+			temp = n1.copy();
+			temp.data = (parseInt(n1.data) + parseInt(n2.data)).toString()
+			return temp;
+		}
+		else if (n1.isNum() && n1.data == "0")
+		{
+			return n2;
+		}
+		else if (n2.isNum() && n2.data == "0")
+		{
+			return n1;
+		}
+
+		temp = node.copy();
+		temp.sub[0] = n1;
+		temp.sub[2] = n2;
+		return temp;
+	}
+
+	if (isProd(node))
+	{
+		n1 = findNumbers(node.sub[0]);
+		n2 = findNumbers(node.sub[2]);
+		if (n1.isNum() && n2.isNum())
+		{
+			temp = n1.copy();
+			temp.data = (parseInt(n1.data) * parseInt(n2.data)).toString()
+			return temp;
+		}
+		else if (n1.isNum() && n1.data == "1")
+		{
+			return n2;
+		}
+		else if (n2.isNum() && n2.data == "1")
+		{
+			return n1;
+		}
+
+		temp = node.copy();
+		temp.sub[0] = n1;
+		temp.sub[2] = n2;
+		return temp;
+	}
+
+	if (isExp(node))
+	{
+		n1 = findNumbers(node.sub[0]);
+		n2 = findNumbers(node.sub[2]);
+		
+		temp = node.copy();
+		temp.sub[0] = n1;
+		temp.sub[2] = n2;
+		return temp;
+	}
+
+	return node;
+}
+
+
 function newSumNode(left, right)
 {
 	var output = new FlexibleNode();
@@ -394,4 +464,17 @@ function sumOfProd(ps)
 		ps.push(newnode);
 	}
 }
+
+// performs additions and multiplications, simplifying numeric expressions
+function numericSimp(ps)
+{
+	var current = ps.stack[ps.stack.length - 1];
+	var newnode = findNumbers(current.copy());
+
+	if (!newnode.equalTo(current))
+	{
+		ps.push(newnode);
+	}
+}
+
 

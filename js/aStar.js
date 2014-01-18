@@ -178,6 +178,15 @@ function runSearch(ps)
 	}
 }
 
+function isExp(node)
+{
+        if (!node.isInner()) { return false; }
+        else if (node.sub.length != 4) { return false; }
+        else if (node.sub[1].data != "^{") { return false; }
+        else if (node.sub[3].data != "}") { return false; }
+        else { return true; }
+}
+
 function isProd(node)
 {
 	if (!node.isInner()) { return false; }
@@ -231,6 +240,147 @@ function distProd(node)
 		node.sub[2] = distProd(node.sub[2]);
 	}
 	return node;
+}
+
+// breaks an expression into an array of terms (on '+' or '\cdot' symbol)
+function termList(node, test)
+{
+	var left, right, output = [];
+	var i;
+
+	if (!test(node)) { return [node]; }
+
+	left = termList(node.sub[0], test);
+	right = termList(node.sub[2], test);
+
+	for (i = 0; i < left.length; i++) { output.push(left[i]); }
+	for (i = 0; i < right.length; i++) { output.push(right[i]); }
+
+	return output;
+}
+
+function newSumNode(left, right)
+{
+	var output = new FlexibleNode();
+
+	output.toInner();
+	output.sub[1] = new FlexibleNode();
+	output.sub[1].toTok();
+	output.sub[1].data = "+";
+	output.sub[0] = left;
+	output.sub[2] = right;
+
+	return output;
+}
+
+function newProdNode(left, right)
+{
+	var output = new FlexibleNode();
+
+	output.toInner();
+	output.sub[1] = new FlexibleNode();
+	output.sub[1].toTok();
+	output.sub[1].data = "\\cdot";
+	output.sub[0] = left;
+	output.sub[2] = right;
+
+	return output;
+}
+
+function newExpNode(left, right)
+{
+	var output = new FlexibleNode();
+
+	output.toInner();
+	output.sub[1] = new FlexibleNode();
+	output.sub[1].data = "^{";
+	output.sub[1].toTok();
+	output.sub[3] = new FlexibleNode();
+	output.sub[3].data = "}";
+	output.sub[3].toTok();
+	output.sub[0] = left;
+	output.sub[2] = right;
+
+	return output;
+}
+
+
+// recombines a previsouly broken expression back together using a variable binary operator
+function reformArray(terms, joiner)
+{
+	var i;
+	var output;
+	output = terms[0];
+
+	for (i = 1; i < terms.length; i++)
+	{
+		output = joiner(output, terms[i]);
+	}
+
+	return output;
+}
+
+// converts a expression into an array (sums) of arrays (products) 
+function breakDownFactors(node)
+{
+	var terms = termList(node, isSum);
+	var current;
+	var temp;
+	var wtypes;
+	var i, j, k;
+	var oneNode = new FlexibleNode();
+
+	oneNode.data = "1";
+	oneNode.toNum();
+
+	for (i = 0; i < terms.length; i++)
+	{
+		temp = termList(terms[i], isProd);
+		if (temp.length > 0)
+		{
+			wtypes = [];
+			for (j = 0; j < temp.length; j++)
+			{
+				wtypes.push({data: isExp(temp[j]) ? temp[j].sub[0] : temp[j], 
+					count: isExp(temp[j]) ? temp[j].sub[2] : oneNode.copy()});
+			}
+			arraySort(wtypes, function(a,b) {return a.data.toString() < b.data.toString(); } );
+
+			temp = [];
+			k = wtypes[0].count;
+			current = wtypes[0].data;
+			for (j = 1; j < wtypes.length; j++)
+			{
+				if (wtypes[j].data.equalTo(current))
+				{
+					k = newSumNode(k, wtypes[j].count);
+				}
+				else
+				{
+					temp.push(oneNode.equalTo(k) ? current : newExpNode(current, k));
+					k = wtypes[j].count;
+					current = wtypes[j].data;
+				}
+			}
+			temp.push(oneNode.equalTo(k) ? current : newExpNode(current, k));
+			terms[i] = reformArray(temp, newProdNode);
+		}
+	}
+
+	return reformArray(terms, newSumNode);
+}
+
+// converts the expression at the top of the stack into a more polynomial form, with terms somewhat simplified
+// similar factors in each term will be grouped into exponents
+function groupExponent(ps)
+{
+	var current = ps.stack[ps.stack.length - 1];
+	var newnode = breakDownFactors(current.copy());
+	
+	if (!newnode.equalTo(current))
+	{
+		ps.push(newnode);
+	}
 }
 
 // converts the expression at the top of the stack into a sum of products (applying distributivity)

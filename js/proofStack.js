@@ -124,6 +124,7 @@ function proofStack()
 		output += "<h3>Associativity/Commutativity assumed</h3>\n";
 		output += "<table class='output_table'>\n";
 		output += "<tr><td onclick='sumOfProd(ps)'>Sum of Products</td></tr>\n";
+		output += "<tr><td onclick='groupExponent(ps)'>Group Exponents by Base</td></tr>\n";
 		output += "</table>\n";
 		output += "<h3>Manual Options</h3>\n";
 		output += "<table class='output_table'>\n";

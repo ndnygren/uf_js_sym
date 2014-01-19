@@ -329,6 +329,85 @@ function findNumbers(node)
 }
 
 
+function fact2ToString(fact2)
+{
+	var i;
+	var output = "";
+
+	return JSON.stringify(fact2);
+
+	for (i = 0; i < fact2.length; i++)
+	{
+		output += fact2.head.toString() + "\t" + fact2.comb.toString() + "\n";
+	}
+
+	return output;
+}
+
+
+// sorts and groups terms in a sum by their non-numeric factors and returns a hopefully simplified expression
+// note: expecting numeric factors of each term to be "left-most" in the factor in the term
+function toPoly(node)
+{
+	var terms = termList(node, isSum);
+	var factors;
+	var fact2 = [];
+	var i,j,k;
+	var oneNode = new FlexibleNode();
+	var output = [];
+	var current;
+
+	oneNode.data = "1";
+	oneNode.toNum();
+
+	for (i = 0; i < terms.length; i++)
+	{
+		factors = termList(terms[i], isProd);
+		if (factors[0].isNum())
+		{
+			fact2.push({head: factors[0], tail: [], comb: null});
+			for (j = 1; j < factors.length; j++)
+			{
+				fact2[fact2.length - 1].tail.push(factors[j]);
+			}
+		}
+		else
+		{
+			fact2.push({head: oneNode.copy(), tail: [], comb: null});
+			for (j = 0; j < factors.length; j++)
+			{
+				fact2[fact2.length - 1].tail.push(factors[j]);
+			}
+		}
+		fact2[fact2.length - 1].comb = reformArray(fact2[fact2.length - 1].tail, newProdNode);
+		if (fact2[fact2.length - 1].comb == null) { fact2[fact2.length - 1].comb = oneNode.copy(); }
+	}
+
+	alert(fact2ToString(fact2));
+
+	arraySort(fact2, function(a,b) {return a.comb.toString() < b.comb.toString(); } );
+
+
+	k = fact2[0].head;
+	current = fact2[0].comb;
+	for (i = 1; i < fact2.length; i++)
+	{
+		if (fact2[i].comb.equalTo(current))
+		{
+			k = newSumNode(k, fact2[i].head);
+		}
+		else
+		{
+			output.push(newProdNode(k, current));
+			k = fact2[i].head;
+			current = fact2[i].comb;
+		}
+	}
+	output.push(newProdNode(k, current));
+
+	return reformArray(output, newSumNode);
+}
+
 function newSumNode(left, right)
 {
 	var output = new FlexibleNode();
@@ -477,4 +556,15 @@ function numericSimp(ps)
 	}
 }
 
+// converts an expression into simplified polynomial type expression.
+function termsAsPoly(ps)
+{
+	var current = ps.stack[ps.stack.length - 1];
+	var newnode = toPoly(current.copy());
+
+	if (!newnode.equalTo(current))
+	{
+		ps.push(newnode);
+	}
+}
 

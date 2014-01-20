@@ -318,6 +318,20 @@ function findNumbers(node)
 	{
 		n1 = findNumbers(node.sub[0]);
 		n2 = findNumbers(node.sub[2]);
+		if (n1.isNum() && n2.isNum())
+		{
+			temp = n1.copy();
+			temp.data = Math.pow(parseInt(n1.data), parseInt(n2.data)).toString()
+			return temp;
+		}
+		else if (n1.isNum() && n1.data == "1")
+		{
+			return n1;
+		}
+		else if (n2.isNum() && n2.data == "1")
+		{
+			return n1;
+		}
 		
 		temp = node.copy();
 		temp.sub[0] = n1;
@@ -327,23 +341,6 @@ function findNumbers(node)
 
 	return node;
 }
-
-
-function fact2ToString(fact2)
-{
-	var i;
-	var output = "";
-
-	return JSON.stringify(fact2);
-
-	for (i = 0; i < fact2.length; i++)
-	{
-		output += fact2.head.toString() + "\t" + fact2.comb.toString() + "\n";
-	}
-
-	return output;
-}
-
 
 // sorts and groups terms in a sum by their non-numeric factors and returns a hopefully simplified expression
 // note: expecting numeric factors of each term to be "left-most" in the factor in the term
@@ -382,8 +379,6 @@ function toPoly(node)
 		fact2[fact2.length - 1].comb = reformArray(fact2[fact2.length - 1].tail, newProdNode);
 		if (fact2[fact2.length - 1].comb == null) { fact2[fact2.length - 1].comb = oneNode.copy(); }
 	}
-
-	alert(fact2ToString(fact2));
 
 	arraySort(fact2, function(a,b) {return a.comb.toString() < b.comb.toString(); } );
 
